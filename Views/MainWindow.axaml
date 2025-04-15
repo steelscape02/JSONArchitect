@@ -1,0 +1,140 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="using:JsonArchitect.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+        x:Class="JsonArchitect.Views.MainWindow"
+        x:DataType="viewModels:MainWindowViewModel"
+        x:Name="MainScreen"
+        
+        >
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="ComboBox.flash">
+            <Style.Animations>
+                <Animation Duration="0:0:1.5" Easing="QuadraticEaseInOut"> 
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0.2"/>
+                        <Setter Property="Background" Value="red"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="Opacity" Value="1.0"/>
+                        <Setter Property="Background" Value="red"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0.2"/>
+                        <Setter Property="Background" Value="red"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style></Window.Styles>
+    
+    <SplitView
+        PanePlacement="Left"
+        IsPaneOpen="{Binding IsPaneOpen}"
+        DisplayMode="CompactInline">
+        <SplitView.Pane>
+            <StackPanel>
+                <Button   Margin="10 10 0 0" Command="{Binding ToggleCommand}" 
+                          Content="-" Width="30" HorizontalContentAlignment="Center"/>
+                <CheckBox Margin="10 0 10.5 0" IsChecked="{Binding AllOptional}">
+                    <TextBlock Text="All Optional" TextWrapping="NoWrap"></TextBlock>
+                </CheckBox>
+                <CheckBox Margin="10 0 10.5 0" IsChecked="{Binding SuggestCorrs}">
+                    <TextBlock Text="Suggest Corrections" TextWrapping="NoWrap"></TextBlock>
+                </CheckBox>
+                <CheckBox Margin="10 0 10.5 0" IsChecked="{Binding DetailedErrors}">
+                    <TextBlock Text="Detailed Errors" TextWrapping="NoWrap"></TextBlock>
+                </CheckBox>
+            </StackPanel>
+        </SplitView.Pane>
+        
+        <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,*">
+            <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Popup x:Name="ValidateFlyout" 
+                       PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Button}}" 
+                       Placement="Center" IsOpen="{Binding IsValFlyoutOpen}">
+                    <Border Background="{StaticResource SystemAccentColor}" Padding="10" CornerRadius="4">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                                       Text="{Binding ValidateMsg}" />
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Cancel" Margin="10"
+                                    HorizontalContentAlignment="Center" HorizontalAlignment="Center" 
+                                    Command="{Binding CancelValCommand}"/>
+                        </Grid>
+                    </Border>
+                </Popup>
+                <Popup x:Name="SuggestFlyout"
+                       PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Button}}" 
+                       Placement="Center" IsOpen="{Binding IsSugCorrsFlyoutOpen}">
+                    <Border Background="{StaticResource SystemAccentColor}" Padding="10" CornerRadius="4">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*,*">
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                                       Text="{Binding CorrMsg}"/>
+                            
+                            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                                     Text="{Binding CorrEntry}"/>
+                            
+                            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" 
+                                    HorizontalContentAlignment="Center" Content="Confirm" 
+                                    IsEnabled="{Binding IsCorrEntry}"
+                                    Command="{Binding ConfirmSuggCommand}"/>
+                            
+                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center" Content="Cancel" 
+                                    Command="{Binding CancelSuggCommand}"/>
+                            
+                            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center" Content="Cancel All" 
+                                    Command="{Binding CancelAllSuggCommand}"/>
+                            
+                        </Grid>
+                    </Border>
+                </Popup>
+            </StackPanel>
+            <!--Entry and Output-->
+            <TextBox x:Name="JsonInput" Grid.Row="0" Grid.Column="0" Margin="10 5" 
+                     AcceptsReturn="True" AcceptsTab="True"
+                     Watermark="JSON Data" UseFloatingWatermark="True" 
+                     Text="{Binding JsonInput}">
+                <FlyoutBase.AttachedFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </TextBox>
+            
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="10 5" 
+                     IsEnabled="False"
+                     Text="{Binding JsonOutput}"/>
+            
+            <Menu Grid.Row="1" Grid.Column="0" Margin="10">
+                <MenuItem Header="Upload" Command="{Binding UploadCommand}"/>
+                <MenuItem Header="Clear" IsEnabled="{Binding IsJsonInput}"
+                          Command="{Binding ClearCommand}"/>
+                <MenuItem Header="Validate" IsEnabled="{Binding IsJsonInput}"
+                          Command="{Binding ValidateCommand}" 
+                          CommandParameter="{Binding #JsonInput}">
+                </MenuItem>
+                <MenuItem Header="Submit" IsEnabled="{Binding IsJsonInputValid}" 
+                          Margin="0 0 5 0" Command="{Binding SubmitCommand}"/>
+                <MenuItem Header="Copy Output" IsEnabled="{Binding IsJsonOutput}" 
+                          Command="{Binding CopyCommand}"/>
+                <MenuItem Header="Save Output" IsEnabled="{Binding IsJsonOutput}" 
+                          Command="{Binding SaveCommand}"/>
+            </Menu>
+            <!-- Items="{Binding Languages}"  -->
+            <ComboBox Grid.Row="1" Grid.Column="1" MaxDropDownHeight="100" HorizontalAlignment="Right" Margin="10"
+                      Classes.flash="{Binding FlashAnimation}"
+                      SelectedIndex="{Binding SelectedIndex}"
+                      SelectedItem="{Binding SelectedLanguage}"
+                      ItemsSource="{Binding Languages}">
+            </ComboBox>
+        </Grid>
+    </SplitView>
+    
+    
+    
+</Window>
