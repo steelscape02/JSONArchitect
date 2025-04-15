@@ -17,7 +17,8 @@ namespace JsonArchitect
         /// <returns></returns>
         public HashSet<Element> ReadJson()
         {
-            var document = JsonNode.Parse(Contents) ?? "";
+            var document = JsonNode.Parse(Contents);
+            if (document == null) return new HashSet<Element>();
             var root = document.Root; //root is JSON Object
             var baseStuff = new HashSet<Element>();
             SubRecursive(root, baseStuff, null);

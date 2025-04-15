@@ -29,7 +29,7 @@ public partial class App : Application
 
             base.OnFrameworkInitializationCompleted();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw new Exception("App cannot launch");
         }
