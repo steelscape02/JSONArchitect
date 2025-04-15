@@ -18,3 +18,6 @@ of development, this program was built originally in JetBrains Rider, then in Vi
 
 - Add **content saving** to main and Settings page
 - Improve **information panel** in Settings page
+
+
+<div style="text-align: center;"><img src="Assets/nc_tp.png" width="110" height="100" alt="NC Software Logo"></div>
