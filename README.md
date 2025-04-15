@@ -18,5 +18,3 @@ of development, this program was built originally in JetBrains Rider, then in Vi
 
 - Add **content saving** to main and Settings page
 - Improve **information panel** in Settings page
-
-<!--![NC Software](Assets/nc_logo.jpeg)-->
