@@ -7,7 +7,7 @@
         x:Class="JsonArchitect.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
         x:Name="MainScreen"
-        
+        Title="JsonArchitect"
         >
     <Design.DataContext>
         <viewModels:MainWindowViewModel/>
